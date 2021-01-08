@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/splash_screen"
+    tools:context=".SplashScreenActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        android:gravity="center_horizontal"
+        android:padding="16dp">
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:padding="16dp"
+            android:id="@+id/btn_phone_sign_in"
+            android:text="Sign In With Phone"
+            android:background="@color/white"
+            android:textColor="@android:color/black"
+            android:drawableStart="@drawable/ic_phone_black_24"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_google_sign_in"
+            android:padding="16dp"
+            android:background="@color/white"
+            android:text="Sign in With Gooogle"
+            android:textColor="@android:color/black"
+            android:drawableStart="@drawable/fui_ic_googleg_color_24dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

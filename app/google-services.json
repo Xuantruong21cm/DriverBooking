@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "870639010004",
+    "project_id": "driverbooking-a4c3d",
+    "storage_bucket": "driverbooking-a4c3d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:870639010004:android:5a87c30988a98328d8bb41",
+        "android_client_info": {
+          "package_name": "com.example.driverbooking"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870639010004-qkdhms9d8lt81196193eemijbspna6f8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.driverbooking",
+            "certificate_hash": "c155d0f93c5806610f63aa06852581a5cdda8d2a"
+          }
+        },
+        {
+          "client_id": "870639010004-1pn7ljlu3gha5aqj6tlnb8l0f3ve17cl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVi7SlrDeL5O1EPnoykJ4Bc5y0-GF7544"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870639010004-1pn7ljlu3gha5aqj6tlnb8l0f3ve17cl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
