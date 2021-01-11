@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "870639010004",
+    "firebase_url": "https://driverbooking-a4c3d-default-rtdb.firebaseio.com",
     "project_id": "driverbooking-a4c3d",
     "storage_bucket": "driverbooking-a4c3d.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.example.driverbooking",
             "certificate_hash": "c155d0f93c5806610f63aa06852581a5cdda8d2a"
+          }
+        },
+        {
+          "client_id": "870639010004-qvi6mqqll17r171l1ln1q6qhcjpdolst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.driverbooking",
+            "certificate_hash": "91779b85697241dd589442de20605a03ba13543f"
           }
         },
         {

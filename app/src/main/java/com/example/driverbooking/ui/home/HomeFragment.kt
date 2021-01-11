@@ -3,6 +3,8 @@ package com.example.driverbooking.ui.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.Looper
 import android.util.Log
@@ -37,6 +39,8 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.single.PermissionListener
+import java.io.IOException
+import java.util.*
 
 class HomeFragment : Fragment(), OnMapReadyCallback {
 
@@ -51,14 +55,14 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
 
     //Online System
     private lateinit var onlineRef : DatabaseReference
-    private lateinit var currentUserRef : DatabaseReference
+    private  var currentUserRef : DatabaseReference? = null
     private lateinit var  driverLocationRef : DatabaseReference
     private lateinit var geoFire : GeoFire
 
     private var onlineValueEventListener = object : ValueEventListener{
         override fun onDataChange(snapshot: DataSnapshot) {
-            if (snapshot.exists()){
-                currentUserRef.onDisconnect().removeValue()
+            if (snapshot.exists() && currentUserRef != null){
+                currentUserRef!!.onDisconnect().removeValue()
             }
         }
 
@@ -104,12 +108,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
     @SuppressLint("MissingPermission")
     private fun init() {
         onlineRef = FirebaseDatabase.getInstance().getReference().child(".info/connected")
-        driverLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCE)
-        currentUserRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCE).child(
-            FirebaseAuth.getInstance().currentUser!!.uid
-        )
-        geoFire = GeoFire(driverLocationRef)
-        registerOnlineSystem()
+
 
         locatitonRequest = LocationRequest()
         locatitonRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -124,17 +123,37 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                 val newPos = LatLng(locationResult!!.lastLocation.latitude, locationResult.lastLocation.longitude)
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newPos,18f))
 
-                //update location
-                geoFire.setLocation(
-                    FirebaseAuth.getInstance().currentUser!!.uid,
-                    GeoLocation(locationResult.lastLocation.latitude,locationResult.lastLocation.longitude)
-                ){key : String?, error : DatabaseError? ->
-                    if (error != null){
-                        Snackbar.make(mapFragment.requireView(),error.message,Snackbar.LENGTH_LONG).show()
-                    }else{
-                        Snackbar.make(mapFragment.requireView(),"You are online",Snackbar.LENGTH_SHORT).show()
+                val geocoder = Geocoder(requireContext(), Locale.getDefault())
+                val addressList : List<Address> ?
+                try {
+                    addressList = geocoder.getFromLocation(locationResult.lastLocation.latitude,
+                    locationResult.lastLocation.longitude,1)
+                    val cityName  = addressList[0].locality
+
+                    driverLocationRef = FirebaseDatabase.getInstance().getReference(Common.DRIVERS_LOCATION_REFERENCE)
+                        .child("HaNoi")
+                    currentUserRef = driverLocationRef.child(
+                        FirebaseAuth.getInstance().currentUser!!.uid
+                    )
+                    geoFire = GeoFire(driverLocationRef)
+
+                    //update location
+                    geoFire.setLocation(
+                        FirebaseAuth.getInstance().currentUser!!.uid,
+                        GeoLocation(locationResult.lastLocation.latitude,locationResult.lastLocation.longitude)
+                    ){key : String?, error : DatabaseError? ->
+                        if (error != null){
+                            Snackbar.make(mapFragment.requireView(),error.message,Snackbar.LENGTH_LONG).show()
+                        }else{
+                            Snackbar.make(mapFragment.requireView(),"You are online",Snackbar.LENGTH_SHORT).show()
+                        }
                     }
+                    registerOnlineSystem()
+
+                }catch (e : IOException){
+                    Snackbar.make(requireView(), e.message!!,Snackbar.LENGTH_SHORT).show()
                 }
+
             }
         }
 
@@ -171,7 +190,7 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
                         .parent as View
                     var locationButton  = view.findViewById<View>("2".toInt())
                     var params = locationButton.layoutParams as RelativeLayout.LayoutParams
-                    params.addRule(RelativeLayout.ALIGN_TOP,0)
+                    params.addRule(RelativeLayout.ALIGN_PARENT_TOP,0)
                     params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM,RelativeLayout.TRUE)
                     params.bottomMargin = 50
                 }
@@ -193,7 +212,6 @@ class HomeFragment : Fragment(), OnMapReadyCallback {
             val success  = googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(context,R.raw.uber_maps_style))
             if (!success){
                 Log.e("STYLE_ERRO", "Style parsing erro" )
-
             }
         }catch (e : Resources.NotFoundException){
             Log.e("STYLE_ERRO", e.message.toString())
